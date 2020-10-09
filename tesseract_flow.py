@@ -35,6 +35,7 @@ class Batch_Image_Processing:
 					+ image_name), dpi = (300, 300)) 
 
 	def binarize_images(self, output_path):
+		# binarization scheme adopted from "https://note.nkmk.me/en/python-numpy-opencv-image-binarization/"
 		for image_name in os.listdir():
 			if (image_name != ".DS_Store"):
 				img = np.array(Image.open(image_name).convert("L")) # convert to grayscale
