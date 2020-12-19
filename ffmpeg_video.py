@@ -9,19 +9,19 @@ class Video_Editing:
 		self.path = path
 		os.chdir(self.path)
 	
-	def slice_video(self, start_time, end_time):
+	def slice_video(self, start_time, duration):
 		new_video_name = "sliced " + self.video_name
 
 		# see "https://trac.ffmpeg.org/wiki/Seeking" for more information
-		ffmpeg_slice = ["ffmpeg", "-i", self.video_name, "-c", "copy", "-ss", 
-			start_time, "-to", end_time, new_video_name] 
+		ffmpeg_slice = ["ffmpeg", "-ss", start_time, "-i", self.video_name, 
+			"-to", duration, "-c", "copy", new_video_name]
 		subprocess.call(ffmpeg_slice)
 
 	def change_frame_rate(self, fps):
-		new_video_name = str(fps) + self.video_name
+		new_video_name = str(fps) + " fps " + self.video_name
 
 		# see "https://trac.ffmpeg.org/wiki/ChangingFrameRate" for more information
-		ffmpeg_change_frame_rate = ["ffmpeg", "-i", self.video_name, "-vf", 
+		ffmpeg_change_frame_rate = ["ffmpeg", "-i", self.video_name, "-filter:v", 
 			"fps=fps=" + str(fps), new_video_name]
 		subprocess.call(ffmpeg_change_frame_rate)
 
@@ -36,10 +36,9 @@ class Video_Editing:
 		subprocess.call(ffmpeg_combine_videos)
 
 	def crop_video_size(self, width, height, x, y):
-		crop_dimensions = (str(width) + ":" + str(height) + ":" + str(x) + ":" 
-			+ str(y))
+		crop_dimensions = (str(width) + ":" + str(height) + ":" + str(x) + ":" + str(y))
 
-		# see ffmpeg's documentation on the crop command for more information
+		# see "https://ffmpeg.org/ffmpeg-filters.html#crop" for more information
 		ffmpeg_crop_video = ["ffmpeg", "-i", self.video_name, "-vf", 
 			"crop=" + crop_dimensions, "-c:a", "copy", "cropped.mp4"]
 		subprocess.call(ffmpeg_crop_video)
@@ -53,3 +52,4 @@ class Video_Editing:
 		for file in os.listdir(self.path):
 			if file.endswith(".jpg"):
 				shutil.move(self.path + "/" + file, output_path)
+
