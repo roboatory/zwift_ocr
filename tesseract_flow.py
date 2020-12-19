@@ -14,12 +14,8 @@ class Batch_Image_Processing:
 			if (image_name != ".DS_Store"):
 				img = Image.open(image_name)
 
-				width, height = img.size
+				crop_img = img.crop((left, upper, right, lower))
 
-				# dimensions for cropped rectangle; parameters represent directionals
-				crop_specs = (left, upper, width - right, height - lower)
-
-				crop_img = img.crop(crop_specs)
 				resizedImage = crop_img.resize((90, 44)) # consistent size
 				resizedImage.save(output_path + "/" + crop_label + " " + image_name, 
 					dpi = (300, 300))
@@ -52,12 +48,11 @@ class Batch_Image_Processing:
 		tesseract_results = ""
 
 		# sort files numerically 
-		files = np.array([file for file in os.listdir() if file != ".DS_Store"])
-		numbers = np.array([re.findall("\d+", element) for element in files 
-			if element != ".DS_Store"]).reshape(len(files), )
+		files = [file for file in os.listdir() if file != ".DS_Store"]
+		digits = [int(re.findall("\d+", file)[0]) for file in files]
 
-		zipped_files = set(zip(files, map(int, numbers)))
-		sorted_files = sorted(zipped_files, key = lambda item : item[1])
+		data = tuple(zip(files, digits))
+		sorted_files = sorted(data, key = lambda digit : digit[1])
 
 		# run tesseract
 		for image_name, capture_number in sorted_files:
@@ -81,20 +76,13 @@ class Batch_Image_Processing:
 		# write to output
 		with open("tesseract_results.txt", "w") as f:
 			f.write("{}".format(tesseract_results))
-
+		
 def count_blanks(tesseract_txt):
+	tesseract_results = []
+
 	with open(tesseract_txt, "r") as f:
-		lines = f.readlines()
-		tesseract_results = [line.split(" ")[-1] for line in lines]
-		
-		correct = 0
-		total = 0
+		for line in f: 
+			result = line.split(" ")[-1]
+			tesseract_results.append(result)
 
-		# count number of blanks and use it as a metric for determining efficiency
-		for result in tesseract_results:
-			total += 1
-			if result.strip().isdigit():
-				correct += 1
-
-		return (correct / total) * 100
-		
+	return (len(tesseract_results) - tesseract_results.count("\n")) / len(tesseract_results)
