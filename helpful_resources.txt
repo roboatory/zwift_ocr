@@ -1,0 +1,7 @@
+1. Great Forum Discussion on FFmpeg's Crop Feature -> https://video.stackexchange.com/questions/4563/how-can-i-crop-a-video-with-ffmpeg
+2. Split Video Into Constituent Frames -> https://trac.ffmpeg.org/wiki/Create%20a%20thumbnail%20image%20every%20X%20seconds%20of%20the%20video
+3. PIL Image Module Docs -> https://pillow.readthedocs.io/en/stable/reference/Image.html
+4. PIL ImageEnhancer Module Docs -> https://pillow.readthedocs.io/en/stable/reference/ImageEnhance.html
+5. PIL ImageFilter Module Docs -> https://pillow.readthedocs.io/en/5.1.x/reference/ImageFilter.html
+6. Regex Documentation -> https://docs.python.org/3/library/re.html
+7. Tesseract Documentation -> https://tesseract-ocr.github.io/tessdoc/
